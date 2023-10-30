@@ -1,6 +1,6 @@
 ---
 title: "Stat 850 Project"
-author: "Firstname Lastname, Firstname Lastname, ..."
+author: "Augustine Kena Adjei, Fransis Marfo, Oluwafunmibi Omotayo Fasanya"
 format: md
 ---
 
