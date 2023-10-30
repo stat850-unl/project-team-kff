@@ -147,3 +147,45 @@ Here is a data dictionary showing each variable, the type of variable, units, an
 |                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
 |                                                   |                                                                                                                                                                                                     |             |         | NA indicates missing data                                         |
 +---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+
+**Project Goals**
+
+This data is interesting to us because we are keen on unveiling the dominant category of electric vehicles (BEVs or PHEVs) and identifying the most popular "make" and "model" across different cities and states in the United States. Additionally, we're eager to explore intriguing details, like pinpointing regions with a high prevalence of Tesla ownership and uncovering interesting findings about electric cars within the dataset.
+
+We will use this dataset to explore the following topics:
+
+-   Identify which demographics (states or cities or counties) are adopting electric vehicles more rapidly, and how it provide information on the growth of the electric vehicle industry in the United States.
+
+-   Identify the most affordable electric vehicles with a competitive MSRP and a decent electric range.
+
+-   Create engaging data visualizations that show the relationship between MSRP and electric range, revealing interesting trends and correlations.
+
+-   Determine electric vehicles with a lower MSRP that offer an unexpectedly luxurious experience.
+
+-   Determine consumer preferences: which "Model" of a particular "Make" is very popular among the customers and which vehicles resonate with a state's residents and provides feedback on brands that appeal to the market.
+
+-   Determine if "Model Year" helps to monitor the adoption of newer electric vehicles. A rise in newer model years indicates that consumers are more interested in the latest advancements.
+
+-   Determine which cities or states or counties are the highest consumers of specific brands of electric cars either Battery Electric Vehicles (BEVs) or Plug-in Hybrid Electric Vehicles (PHEVs).
+
+-   Also, we hope to track the growth rate of electric car adoption over years in various cities or states. This can enable us to determine the cities or states with the fastest-growing EV markets.
+
+We expect to create:
+
+-   Create a map showing the distributions of electric vehicles by states, model year, and also provide a visual representation of adoption rates.
+
+-   Visualize the market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
+
+-   Create a line graph/time series plot that displays the growth, price and range of electric vehicles over the years. This will also enable us track the growth rate of electric car adoption by states or cities over multiple model years, highlighting regions with the fastest growth rate in electric vehicle use.
+
+-   Determine graphically if there exists a relationship between MSRP and electric range through scatterplot.
+
+-   Create bar plots to compare the "Make" of electric vehicles and determine the most used brand across different states or cities in the United States.
+
+-   Determine the distribution of MSRP within different vehicle categories and identify outliers.
+
+-   Examine the distribution of electric vehicle model years, providing insights into the age of the vehicles in the dataset through Histograms.
+
+-   Create stacked bar plots to illustrate the preference for specific "Model" across the different "Make of electric vehicles" for states or cities.
+
+Note: We'll use graphs and numerical summaries such as histograms or density plots (continuous variables), column plots (categorical variables), boxplots, 5 number summaries (min, 25%, mean, 75%, and max), tabular data summaries (for categorical variables).
