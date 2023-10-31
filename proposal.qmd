@@ -189,3 +189,33 @@ We expect to create:
 -   Create stacked bar plots to illustrate the preference for specific "Model" across the different "Make of electric vehicles" for states or cities.
 
 Note: We'll use graphs and numerical summaries such as histograms or density plots (continuous variables), column plots (categorical variables), boxplots, 5 number summaries (min, 25%, mean, 75%, and max), tabular data summaries (for categorical variables).
+
+**Division of Labor**
+
+What we'll be doing
+
+1.  Week of Nov 6 -- Work on cleaning the data, performing data summary and visualization.
+
+2.  Week of Nov 13 -- Data Transformation, modelling and using the new findings to refine the objectives and generate new interesting ideas.
+
+3.  Week of Nov 20 -- Begin to write the project Report
+
+4.  Week of Nov 27 -- Make final changes based on input from the course lecturer.
+
+5.  Week of Dec 4 - Complete the project presentation and video
+
+    · Clean the data (Kena)
+
+    · Data Summary (Francis)
+
+    · Visualization (Funmibi)
+
+    · Transformation (Kena)
+
+    · Modelling (Francis)
+
+    · Use findings to refine the objectives and generate new interesting ideas. (Funmibi)
+
+    · Create Shiny Application based on the new idea (Kena, Francis, Funmibi)
+
+    · Presentation (Kena, Francis, Funmibi)
