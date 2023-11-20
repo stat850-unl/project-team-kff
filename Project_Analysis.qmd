@@ -1,0 +1,106 @@
+---
+title: "KFF Project"
+author: "KFF"
+format: html
+---
+
+# Define the URL of the data
+
+# Load the data from the URL directly into a data frame
+
+```{r}
+url <- "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
+data <- read.csv(url)
+```
+
+# Load required libraries
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+#Data Summary
+
+```{r}
+summary(data)
+str(data)
+```
+
+```{r}
+Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")
+data <- data %>% mutate_at(Cat_Variable, as.factor)
+```
+
+# Filter out rows with missing or zero Electric.Range
+
+```{r}
+data <- data %>%
+  filter(!is.na(Electric.Range) & Electric.Range > 0)
+```
+
+# Explore adoption by state
+
+```{r}
+state_adoption <- data %>%
+  group_by(State) %>%
+  summarize(Average_Electric_Range = mean(Electric.Range, na.rm = TRUE),
+            Total_Vehicles = n())
+```
+
+# Plot average electric range by state
+
+```{r}
+ggplot(state_adoption, aes(x = State, y = Average_Electric_Range, fill = Total_Vehicles)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Electric Range by State",
+       x = "State",
+       y = "Average Electric Range",
+       fill = "Total Vehicles") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Comment: As observed from the plot, Electric Vehicles in New Hamsphire have the highest average electric charge. Vehicle in New Hamsphire travel the furthest purely on its electric charge whereas electric vehicle in kansas travel the least. About 99% of the electric vehicles are in Washington State. Thus, almost all of the vehicles are in Washington state. Since almost all the vehicles are in Washington,it will be very interesting to split the data into two groups, where the first group comprise of the washington state data alone and the other contains other
+
+#Objective Five: Create bar plots to compare the "Make" of electric vehicles and determine the most used brand across different states or cities in the United States.
+
+```{r}
+# Top N Makes
+top_n_makes <- data %>%
+  group_by(Make) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 10) %>%
+  pull(Make)
+
+# Filter data for top N Makes
+data_top_makes <- data %>%
+  filter(Make %in% top_n_makes)
+```
+
+```{r}
+# Bar plot of top N Makes
+ggplot(data_top_makes, aes(x = Make)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  labs(title = "Top 10 Makes", x = "Make", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Top N Electric Vehicle Types
+top_n_ev_types <- data %>%
+  group_by(Electric.Vehicle.Type) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 5) %>%
+  pull(Electric.Vehicle.Type)
+
+# Filter data for top N Electric Vehicle Types
+data_top_ev_types <- data %>%
+  filter(Electric.Vehicle.Type %in% top_n_ev_types)
+```
+
+
+
