@@ -189,4 +189,3 @@ ev_vehicle_trend <- data_top_makes  %>%
   summarise(avg_price = mean(Base.MSRP),
             avg_range = mean(Electric.Range))
 ```
-
