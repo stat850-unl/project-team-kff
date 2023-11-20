@@ -1,0 +1,192 @@
+---
+title: "KFF Project"
+author: "KFF"
+format: html
+---
+
+# Define the URL of the data
+
+# Load the data from the URL directly into a data frame
+
+```{r}
+url <- "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
+data <- read.csv(url)
+```
+
+# Load required libraries
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+#Data Summary
+
+```{r}
+summary(data)
+str(data)
+```
+
+```{r}
+Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")
+data <- data %>% mutate_at(Cat_Variable, as.factor)
+```
+
+# Filter out rows with missing or zero Electric.Range
+
+```{r}
+data <- data %>%
+  filter(!is.na(Electric.Range) & Electric.Range > 0)
+```
+
+# Explore adoption by state
+
+```{r}
+state_adoption <- data %>%
+  group_by(State) %>%
+  summarize(Average_Electric_Range = mean(Electric.Range, na.rm = TRUE),
+            Total_Vehicles = n())
+```
+
+# Plot average electric range by state
+
+```{r}
+ggplot(state_adoption, aes(x = State, y = Average_Electric_Range, fill = Total_Vehicles)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Electric Range by State",
+       x = "State",
+       y = "Average Electric Range",
+       fill = "Total Vehicles") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Comment: As observed from the plot, Electric Vehicles in New Hamsphire have the highest average electric charge. Vehicle in New Hamsphire travel the furthest purely on its electric charge whereas electric vehicle in kansas travel the least. About 99% of the electric vehicles are in Washington State. Thus, almost all of the vehicles are in Washington state. Since almost all the vehicles are in Washington,it will be very interesting to split the data into two groups, where the first group comprise of the washington state data alone and the other contains other
+
+#Objective Five: Create bar plots to compare the "Make" of electric vehicles and determine the most used brand across different states or cities in the United States.
+
+```{r}
+# Top N Makes
+top_n_makes <- data %>%
+  group_by(Make) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 10) %>%
+  pull(Make)
+
+# Filter data for top N Makes
+data_top_makes <- data %>%
+  filter(Make %in% top_n_makes)
+```
+
+```{r}
+# Bar plot of top N Makes
+ggplot(data_top_makes, aes(x = Make)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  labs(title = "Top 10 Makes", x = "Make", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Top N Electric Vehicle Types
+top_n_ev_types <- data %>%
+  group_by(Electric.Vehicle.Type) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 5) %>%
+  pull(Electric.Vehicle.Type)
+
+# Filter data for top N Electric Vehicle Types
+data_top_ev_types <- data %>%
+  filter(Electric.Vehicle.Type %in% top_n_ev_types)
+```
+
+```{r}
+# Box plot of Electric Range by top N Electric Vehicle Types
+ggplot(data_top_ev_types, aes(x = Electric.Vehicle.Type, y = Electric.Range, fill = Electric.Vehicle.Type)) +
+  geom_boxplot() +
+  labs(title = "Electric Range by Electric Vehicle Type", x = "Electric Vehicle Type", y = "Electric Range") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Bar plot of top N Makes with Faceting by Electric Vehicle Type
+ggplot(data_top_makes, aes(x = Make)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  facet_wrap(~ Electric.Vehicle.Type, scales = "free_y", ncol = 2) +
+  labs(title = "Top Makes by Electric Vehicle Type", x = "Make", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# Box plot of Electric Range by Electric Vehicle Type and Faceting by Make
+ggplot(data_top_makes, aes(x = "", y = Electric.Range, fill = Electric.Vehicle.Type)) +
+  geom_boxplot(aes(color = Electric.Vehicle.Type)) +
+  facet_wrap(~ Make, scales = "free_y", ncol = 3) +
+  labs(title = "Electric Range by Electric Vehicle Type, Faceted by Make", x = NULL, y = "Electric Range") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+```{r}
+
+# Bar plot of Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
+data %>%
+  filter(Make %in% top_n_makes) %>%
+  ggplot(aes(x = Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility, fill = Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility)) +
+  geom_bar(aes(color = Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility)) +
+  facet_wrap(~ Make, scales = "free_y", ncol = 2) +
+  labs(title = "CAFV Eligibility, Faceted by Make", x = NULL, y = "Count") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  scale_x_discrete(labels = NULL)
+```
+
+#Objectives Seven: Examine the distribution of electric vehicle model years, providing insights into the age of the vehicles in the dataset through Histograms.
+
+```{r}
+# Bar plot of Vehicle Counts by Year and Faceting by Make
+ggplot(data_top_makes, aes(x = Model.Year)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  facet_wrap(~ Make, scales = "free_y", ncol = 2) +
+  labs(title = "Vehicle Counts by Year, Faceted by Make", x = "Model Year", y = "Count") +
+  theme_minimal()
+```
+#Objective 2: Visualize the market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
+```{r}
+# Calculate market share for each electric vehicle type
+market_share_data <- data %>%
+  group_by(Electric.Vehicle.Type) %>%
+  summarise(total_vehicles = n()) %>%
+  mutate(market_share = total_vehicles / sum(total_vehicles) * 100)
+```
+
+```{r}
+# Bar plot to visualize market share of different electric vehicle types
+ggplot(market_share_data, aes(x = " ", y = market_share, fill = Electric.Vehicle.Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Market Share of Electric Vehicle Types",
+       x = "Electric Vehicle Type",
+       y = "Market Share (%)") +
+  theme_minimal() +
+  scale_fill_manual(values = c("Battery Electric Vehicle (BEV)" = "skyblue", "Plug-in Hybrid Electric Vehicle (PHEV)" = "salmon"))
+```
+#Objective 6: Determine the distribution of MSRP within different vehicle categories and identify outliers.
+```{r}
+# Calculate average price and range by year
+ev_trends <- data %>%
+  group_by(Model.Year) %>%
+  summarise(avg_price = mean(Base.MSRP),
+            avg_range = mean(Electric.Range))
+```
+
+```{r}
+ev_vehicle_trend <- data_top_makes  %>%
+  group_by(Make) %>%
+  summarise(avg_price = mean(Base.MSRP),
+            avg_range = mean(Electric.Range))
+```
+
