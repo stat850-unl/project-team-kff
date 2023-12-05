@@ -189,3 +189,101 @@ ev_vehicle_trend <- data_top_makes  %>%
   summarise(avg_price = mean(Base.MSRP),
             avg_range = mean(Electric.Range))
 ```
+
+
+```{r}
+ggplot(ev_vehicle_trend, aes(x = Make)) +
+  geom_point(aes(y = avg_price, color = "Average Price"), size = 3) +
+  labs(title = "Trends in Electric Vehicle Price Over Top 10 Makes",
+       x = "Make",
+       y = "Value") +
+  theme_minimal() +
+  scale_color_manual(values = c("Average Price" = "red"), guide = "none")
+
+```
+
+```{r}
+ggplot(ev_vehicle_trend, aes(x = Make)) +
+  geom_point(aes(y = avg_range, color = "Average Range"), size = 3) +
+  labs(title = "Trends in Electric Vehicle  Range Over Top 10 Makes",
+       x = "Make",
+       y = "Value") +
+  theme_minimal() +
+  scale_color_manual(values = c("Average Range" = "blue"), guide = "none")
+```
+#Objective Three: Create a line graph/time series plot that displays the growth, price and range of electric vehicles over the years. This will also enable us track the growth rate of electric car adoption by states or cities over multiple model years, highlighting regions with the fastest growth rate in electric vehicle use.
+```{r}
+# Line graph for the growth, price, and range of electric vehicles over the years
+ggplot(ev_trends, aes(x = Model.Year)) +
+  geom_line(aes(y = avg_price, color = "Average Price"), size = 1.5, linetype = "dashed") +
+  labs(title = "Trends in Electric Vehicle  Price Over Years",
+       x = "Model Year",
+       y = "Value") +
+  theme_minimal()+
+  theme(legend.position="none")
+```
+
+```{r}
+# Line graph for the growth, price, and range of electric vehicles over the years
+ggplot(ev_trends, aes(x = Model.Year)) +
+  geom_line(aes(y = avg_range, color = "Average Electric Range"), size = 1.5, linetype = "dashed") +
+  labs(title = "Trends in Electric Vehicle Range Over Years",
+       x = "Model Year",
+       y = "Value") +
+  theme_minimal()+
+  theme(legend.position="none")
+```
+#Objective Eight: Create stacked bar plots to illustrate the preference for specific "Model" across the different "Make of electric vehicles" for states or cities.
+```{r}
+ggplot(data_top_makes, aes(x = Make, fill = Model)) +
+  geom_bar(position = "stack") +
+  labs(title = "Preference for Electric Vehicle Models Across Makes",
+       x = "Make",
+       y = "Count") +
+  scale_fill_discrete() +  # Use default color palette
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+```{r}
+# Calculate the count of electric vehicles by state or city
+location_counts <- data %>%
+  group_by(State) %>%
+  summarise(count = n()) %>%
+  top_n(10, count)  
+
+
+filtered_data <- data %>%
+  filter(State %in% location_counts$State)
+```
+
+
+```{r}
+top_makes <- filtered_data %>%
+  group_by(Make) %>%
+  summarise(count = n()) %>%
+  top_n(10, count) %>%
+  pull(Make)
+
+top_models <- filtered_data %>%
+  group_by(Model) %>%
+  summarise(count = n()) %>%
+  top_n(10, count) %>%
+  pull(Model)
+```
+
+```{r}
+filtered_data <- filtered_data %>%
+  filter(Make %in% top_makes, Model %in% top_models)
+```
+
+```{r}
+ggplot(filtered_data, aes(x = Make, fill = Model)) +
+  geom_bar(position = "stack") +
+  labs(title = "Preference for Top 10 Models Across Top 10 Makes in Top 10 States",
+       x = "Make of Electric Vehicles",
+       y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Set3")
+```
