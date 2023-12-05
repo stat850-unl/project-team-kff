@@ -206,3 +206,209 @@ ggplot(state_adoption, aes(x = State, y = Average_Electric_Range , fill = Total_
        fill = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+
+```{r}
+#| label: fig-state
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the shows total vehicles by states"
+#| echo: false
+
+#Plot total vehicles by state
+ggplot(state_adoption, aes(x = State, y = Total_Vehicles, fill = Average_Electric_Range)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Average Electric Range by State",
+       x = "State",
+       y = "Total Vehicles",
+       fill = "Average Electric Range") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+```{r}
+#| echo: false
+
+# With focus on vehicles in Washington State, filter out rows with missing or zero Electric.Range
+data <- data %>%
+  filter(!is.na(Electric.Range) & Electric.Range > 0)
+
+data <- data %>% filter(State == "WA")
+```
+
+Some of the interesting things we found were that in @fig-state_avg, electric Vehicles in New Hamsphire had the highest average electric charge since vehicle in New Hamsphire travelled the farthest purely on its electric charge whereas electric vehicles in kansas travel the least. 
+
+As shown in @fig-state, about 99% of the electric vehicles registered in Washington state were used in Washington State. Although other vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were very low, we decided to focus more on the vehicles used in Washington State. To cater for the other states, we created an RShiny app where we could visualize the distributions of vehicles in all states.
+
+
+## Methods
+
+After reading data files, we used `str()` function to display the structure of the data. It helped us to quickly understand the various components of the data structure such as structure of lists, and data frames. The `summary()` function was used to obtain a summary of each variable in our the data set. We also used the `mutate_at` function of `dplyr` package to transform columns of the data set to become factors using the `as.factor` function. We used the `is.na()` function to identify missing values within the "Electric.Range". The following functions from the `dplyr` package were also used: `arrange(desc())` and `top_n()` functions were used to arrange the data frame in descending order based on the total number of vehicles and select the top 10 counties and cities within Washington State. We filtered the data by counties and cities, by using the `group_by` function of the `dplyr` package and used `semi_join` to return all rows from the our original "data" where there was a match in county with the new data "top_10_subset". This filtered our original data to obtain the top 10 counties with the highest number of vehicles.
+
+For data visualization, we basically used the `ggplot` function of the `ggplot2` package. We constructed bar plots for average electric range of the top 10 counties with the highest number of vehicles, top 10 "Make" of the vehicle types, Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by "Make", and market share of different electric vehicle types. We constructed box plots for electric range by the top 10 electric vehicle types. Line plots were also constructed to visualize the trends in electric vehicle prices over the years. We then add `themes` and `labs` as layers for displaying the titles of the plots and labels for x and y axes. Finally, we applied `theme_minimal()` to make a minimalist theme with no background annotations.
+
+## Topic of Exploration
+
+Which cities or counties adopted electric vehicles more rapidly?
+
+```{r, filter and explore adoption by County and City}
+#| echo: false
+
+# Explore adoption by county
+County_adoption <- data %>%
+  group_by(County) %>%
+  summarize(Average_Electric_Range = mean(Electric.Range, na.rm = TRUE),
+            Total_Vehicles = n())
+
+# Filtering based on top 10 highest Total_Vehicles
+top_10_subset_county <- County_adoption %>%
+  arrange(desc(Total_Vehicles)) %>%
+  top_n(10, Total_Vehicles)
+
+subset_data <- semi_join(data, top_10_subset_county, by = "County")
+
+# Explore adoption by city
+City_adoption <- data %>%
+  group_by(City) %>%
+  summarize(Average_Electric_Range = mean(Electric.Range, na.rm = TRUE),
+            Total_Vehicles = n())
+
+# Filtering based on top 10 highest Total_Vehicles
+top_10_subset_city <- City_adoption %>%
+  arrange(desc(Total_Vehicles)) %>%
+  top_n(10, Total_Vehicles)
+```
+
+```{r}
+#| label: fig-top-counties
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the top 10 Counties in Washington State"
+#| echo: false
+
+#  Top 10 Counties in Washington State
+ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total_Vehicles)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Top 10 counties in Washington State ",
+       x = "County",
+       y = "Total Vehicles") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+#| label: fig-top-cities
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the top 10 Cities in Washington State"
+#| echo: false
+
+#  Top 10 Cities in Washington State
+ggplot(top_10_subset_city, aes(x = reorder(City, -Total_Vehicles), y = Total_Vehicles)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Top 10 cities in Washington State ",
+       x = "Cities",
+       y = "Total Vehicles") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+We observed that King county recorded the highest number of electric vehicles while Island had the least number of electric vehicles. For the cities, Seattle recorded the highest number of electric vehicles while Tacoma had the least number of electric vehicles.
+
+## Exploration topic
+
+How do the counties and cities vary in terms of electric range? What does it say?
+
+```{r, average electric range by County}
+#| label: fig-avg_electric-county
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the Average electric range by county"
+#| echo: false
+
+# Average electric range by county
+ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total_Vehicles, fill = Average_Electric_Range )) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_gradient(low = "yellow", high = "darkblue") +
+  labs(title = "Average Electric Range of the Top 10 counties in Washington State",
+       x = "County",
+       y = "Total Vehicles",
+       fill = "Average Electric Range") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r, average electric range by City}
+#| label: fig-avg_electric-city
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the Average electric range by city"
+#| echo: false
+
+# Average electric range by city
+ggplot(top_10_subset_city , aes(x = reorder(City, -Total_Vehicles), y = Total_Vehicles, fill = Average_Electric_Range )) +
+  geom_bar(stat = "identity", position = "dodge") +scale_fill_gradient(low = "green", high = "darkblue")+
+  labs(title = "Average Electric Range of the Top 10 Cities in Washington State",
+       x = "City",
+       y = "Total Vehicles",
+       fill = "Average Electric Range") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+We observed that King country recorded the highest average electric range while Sammamish was the city with the highest average electric range. This informs us about how far a vehicle can travel purely on its electric charge.
+
+## Exploration topic
+
+What are consumer preferences? Which "Make" is very popular among the customers and which vehicles resonate with residents?
+
+```{r, top 10 vehicle brands}
+#| echo: false
+
+# Top 10 Makes
+top_n_makes <- subset_data %>%group_by(Make) %>%summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 10) %>%
+  pull(Make)
+
+# Filter data for top 10 Makes
+data_top_makes <- subset_data %>%
+  filter(Make %in% top_n_makes)
+```
+
+
+```{r, top 10 vehicle brands}
+#| label: fig-top-make
+#| fig-width: 8
+#| fig-height: 4 # Change the figure dimensions using fig-width/height
+#| out-width: 80% # This changes the size of the figure as rendered in the text.
+#| fig-cap: "This figure shows the top 10 Electric Vehicle Makes"
+#| echo: false
+ 
+# Bar plot of top 10 Makes
+ggplot(data_top_makes, aes(x = Make)) +
+  geom_bar(fill = "skyblue", color = "black") +
+  labs(title = "Top 10 Makes", x = "Make", y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+We can observe that most consumers preferred Tesla. It was the most popular brand among customers. Volvo was the least popular vehicle brand among the consumers.
+
+## Exploration topic
+
+How do the vehicle types vary by electric range and vehicle "Make"?
+
+```{r, Electric range}
+#| echo: false
+
+# Electric Vehicle Types
+vehicle_type <- subset_data %>% group_by(Electric.Vehicle.Type) %>% summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  slice_head(n = 5) %>%
+  pull(Electric.Vehicle.Type)
+data_ev_types <- subset_data %>%
+  filter(Electric.Vehicle.Type %in% vehicle_type)
+```
