@@ -1,12 +1,9 @@
 ---
-title: "Stat 850 Project Report"
-author: "KFF"
 format: html
 editor: visual
 ---
 
 ```{r, eval = F}
-#| echo: false
 # This code chunk contains code to install all of the dependencies
 # necessary to compile and run your report, using if-statements to
 # reduce install time for unnecessary code.
@@ -26,16 +23,7 @@ if (!"emo" %in% installed.packages()) {
   remotes::install_github("hadley/emo")}
 ```
 
-## Introduction
-
-This dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL). A Battery Electric Vehicle (BEV) is an all-electric vehicle using one or more batteries to store the electrical energy that powers the motor and is charged by plugging the vehicle in to an electric power source. A Plug-in Hybrid Electric Vehicle (PHEV) is a vehicle that uses one or more batteries to power an electric motor; uses another fuel, such as gasoline or diesel, to power an internal combustion engine or other propulsion source; and is charged by plugging the vehicle in to an electric power source. It provides insights into the demographic distribution, Make, Model, and geographical prevalence of BEVs and PHEVs, contributing to a better understanding of the electric vehicle landscape in the United State.
-
-The dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL).
-
-The data we used in this project is from $https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD$.
-
-```{r}
-#| echo: false
+```{r, echo=FALSE, message=FALSE}
 
  # Define the URL of the data you want to load
 url <- "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
@@ -43,12 +31,12 @@ url <- "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
 # Load the data from the URL directly into a data frame
 data <- read.csv(url)
 
+library(dplyr)
 library(ggplot2)
-suppressMessages(library(tidyr))
-suppressMessages(library(dplyr))
+library(tidyr)
 
 #Data Summary
-#summary(data)
+summary(data)
 str(data)
 
 
@@ -56,7 +44,42 @@ str(data)
 Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")
 data <- data %>% mutate_at(Cat_Variable, as.factor)
 
+
+# With focus on vehicles in Washington State, filter out rows with missing or zero Electric.Range
+data <- data %>%
+  filter(!is.na(Electric.Range) & Electric.Range > 0)
+
+data <- data %>% filter(State == "WA")
+
 ```
+
+## Introduction
+
+This dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL). A Battery Electric Vehicle (BEV) is an all-electric vehicle using one or more batteries to store the electrical energy that powers the motor and is charged by plugging the vehicle in to an electric power source. A Plug-in Hybrid Electric Vehicle (PHEV) is a vehicle that uses one or more batteries to power an electric motor; uses another fuel, such as gasoline or diesel, to power an internal combustion engine or other propulsion source; and is charged by plugging the vehicle in to an electric power source. It provides insights into the demographic distribution, Make, Model, and geographical prevalence of BEVs and PHEVs, contributing to a better understanding of the electric vehicle landscape in the United State.
+
+We used this data set to explore the following:
+
+-   Which demographics (cities and counties) adopted electric vehicles more rapidly?
+
+-   How do the counties and cities vary in terms of electric range? What does it say?
+
+-   What are consumer preferences? Which "Make" is very popular among the customers and which vehicles resonate with residents?
+
+-   How do the vehicle types vary by electric range and vehicle "Make"?
+
+-   Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
+
+-   Do the distributions of electric vehicle model years provide information about the age of the vehicles?
+
+-   The market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
+
+-   Determine the distribution of MSRP within different vehicle categories.
+
+-   Create a line plot to display the vehicle price over the years.
+
+Some of the interesting things we found were that Electric Vehicles in New Hamsphire had the highest average electric charge since vehicle in New Hamsphire travelled the farthest purely on its electric charge whereas electric vehicles in kansas travel the least. The dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL). Of all the vehicles registered, about 99% of the electric vehicles were actually used in Washington state. Although some of the vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were awfully low, we decided to focus more on the vehicles in Washington State.
+
+The data we used in this project is from $$https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD$$.
 
 The data was collected through the vehicle registration records with the Washington State Department of License (DoL). When an individuals purchase a BEV or PHEV and intends to operate on public roads, they are required to register the vehicle with the department of licensing. These registration are kept as primary source of information.
 
@@ -159,50 +182,3 @@ Here's a detailed description of the data.
 |                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
 |                                                   |                                                                                                                                                                                                     |             |         | NA indicates missing data                                         |
 +---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
-
-We used this data set to explore the following:
-
--   Which demographics (cities and counties) adopted electric vehicles more rapidly?
-
--   How do the counties and cities vary in terms of electric range? What does it say?
-
--   What are consumer preferences? Which "Make" is very popular among the customers and which vehicles resonate with residents?
-
--   How do the vehicle types vary by electric range and vehicle "Make"?
-
--   Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
-
--   Do the distributions of electric vehicle model years provide information about the age of the vehicles?
-
--   The market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
-
--   Determine the distribution of MSRP within different vehicle categories.
-
--   Create a line plot to display the vehicle price over the years.
-
-```{r}
-#| echo: false
-
-state_adoption <- data %>%
-  group_by(State) %>%
-  summarize(Average_Electric_Range = mean(Electric.Range, na.rm = TRUE),
-            Total_Vehicles = n())
-```
-
-```{r,average electric range}
-#| label: fig-state_avg
-#| fig-width: 8
-#| fig-height: 4 # Change the figure dimensions using fig-width/height
-#| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the shows average electric range by states"
-#| echo: false
-
-#Plot average electric range by state
-ggplot(state_adoption, aes(x = State, y = Average_Electric_Range , fill = Total_Vehicles )) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Average Electric Range by State",
-       x = "State",
-       y = "Average Electric Range",
-       fill = "Total Vehicles") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
