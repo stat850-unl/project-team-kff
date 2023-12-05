@@ -20,82 +20,165 @@ if (!"remotes" %in% installed.packages()) {
 
 # This is how to do it for a package that's only on github
 if (!"emo" %in% installed.packages()) {
-  remotes::install_github("hadley/emo")
-
+  remotes::install_github("hadley/emo")}
 ```
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
+
+ # Define the URL of the data you want to load
+url <- "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
+
+# Load the data from the URL directly into a data frame
+data <- read.csv(url)
+
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+#Data Summary
+summary(data)
+str(data)
+
+
+#Transform columns of the data set to become factors
+Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")
+data <- data %>% mutate_at(Cat_Variable, as.factor)
+
+
+# With focus on vehicles in Washington State, filter out rows with missing or zero Electric.Range
+data <- data %>%
+  filter(!is.na(Electric.Range) & Electric.Range > 0)
+
+data <- data %>% filter(State == "WA")
 
 ```
 
 ## Introduction
 
-Introduce your dataset and basic questions for exploration. Explain any unique approaches you will take or any interesting features of your dataset that you have to overcome. Cite the source of your dataset, and briefly discuss how it was collected.
+This dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL). A Battery Electric Vehicle (BEV) is an all-electric vehicle using one or more batteries to store the electrical energy that powers the motor and is charged by plugging the vehicle in to an electric power source. A Plug-in Hybrid Electric Vehicle (PHEV) is a vehicle that uses one or more batteries to power an electric motor; uses another fuel, such as gasoline or diesel, to power an internal combustion engine or other propulsion source; and is charged by plugging the vehicle in to an electric power source. It provides insights into the demographic distribution, Make, Model, and geographical prevalence of BEVs and PHEVs, contributing to a better understanding of the electric vehicle landscape in the United State.
 
-Discuss the variables in the dataset and if there are anomalies in the variables, provide some visual assessment of the anomalies and explain how they may have arisen. You should cover most of the information in your proposal data section, but should primarily use paragraphs and not lists/tables (the exception may be a list of e.g. items which were measured).
+We used this data set to explore the following:
 
-## Methods
+-   Which demographics (cities and counties) adopted electric vehicles more rapidly?
 
-Describe any data cleaning and rearranging you needed to do to get your dataset into a workable form. Make sure to cite any packages which were important in your data cleaning process in this section. For instance, if you used dplyr, then it would be appropriate to say something like
+-   How do the counties and cities vary in terms of electric range? What does it say?
 
-> we used the group-apply-combine paradigm with the `dplyr` functions `group_by` and `summarize` [@dplyr-package] to generate a dataset for each day of the observation period from the 15-minute interval observations in the raw data set.
+-   What are consumer preferences? Which "Make" is very popular among the customers and which vehicles resonate with residents?
 
-## Topic of Exploration
+-   How do the vehicle types vary by electric range and vehicle "Make"?
 
-Here, you want to introduce the first topic you want to explore with your (newly cleaned up) data. Code to process data should be contained in chunks above this point, and those chunks should *not* be included in the report.
+-   Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
 
-You can add options to executable code like this
+-   Do the distributions of electric vehicle model years provide information about the age of the vehicles?
 
-```{r}
-#| echo: false
-2 * 2
-```
+-   The market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
 
-The `echo: false` option disables the printing of code (only output is displayed).
+-   Determine the distribution of MSRP within different vehicle categories.
 
-If you generate a figure, it should have a caption. Here's a demonstration of how to do that:
+-   Create a line plot to display the vehicle price over the years.
 
-```{r iris-plot}
-#| label: fig-iris
-#| fig-width: 8
-#| fig-height: 4 # Change the figure dimensions using fig-width/height
-#| out-width: 80% # This changes the size of the figure as rendered in the text. 
-#| fig-cap: "This figure shows the relationship between sepal width and petal width in irises. I've used geom_jitter to combat overplotting, as the data are measured in relatively consistent increments. The figure is drawn with `ggplot2` [@ggplot2-package]."
-#| echo: false
+Some of the interesting things we found were that Electric Vehicles in New Hamsphire had the highest average electric charge since vehicle in New Hamsphire travelled the farthest purely on its electric charge whereas electric vehicles in kansas travel the least. The dataset contains information about Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) that have been duly registered as of September 30, 2023 and are currently on record with the Washington State Department of Licensing (DOL). Of all the vehicles registered, about 99% of the electric vehicles were actually used in Washington state. Although some of the vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were awfully low, we decided to focus more on the vehicles in Washington State.
 
+The data we used in this project is from $$https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD$$.
 
-data(iris)
-library(ggplot2)
-ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, color = Species)) + 
-  geom_jitter() + 
-  xlab("Sepal Width (cm)") + ylab("Petal Width (cm)") + 
-  ggtitle("Sepal and Petal Dimensions")
-```
+The data was collected through the vehicle registration records with the Washington State Department of License (DoL). When an individuals purchase a BEV or PHEV and intends to operate on public roads, they are required to register the vehicle with the department of licensing. These registration are kept as primary source of information.
 
-Then, you can reference @fig-iris in the text and the appropriate cross-reference will be generated.
+Here's a detailed description of the data.
 
-You can find additional information about formatting figures generated from code in the [quarto documentation](https://quarto.org/docs/authoring/figures.html#computations).
-
-## Additional Exploration topic
-
-Add another topic here... as many as you desire, really. Make sure to include a transition between the two sections that connects the two with some sort of logical train of thought.
-
-## Conclusion
-
-Here, you want to summarize the main points of what you've learned from this investigation, in paragraph form.
-
-## Tips
-
-(delete this section from your report!)
-
-Almost anything you might want to know about how to format output in quarto can be found [here](https://quarto.org/docs/authoring/markdown-basics.html). Feel free to email/come to office hours to figure out how to do XYZ - part of the goal of making you write this report is that I want you to know how to write e.g. a journal paper in Quarto as well, so now's the time to experiment.
-
-If you want to know what the wordcount of your report is, you can run the following command in your terminal:
-
-```         
-pandoc --lua-filter wordcount.lua report.qmd
-```
-
-Notice that I have not pushed `_output/report.html` or the `_output/report_files/` folder to github - this is intentional. I have actually set `_output` to not show up in git, to encourage you all to NOT push the rendered files to github and to instead work from the markdown files directly.
-
-You may find it cleaner to create a figure subdirectory and store any figures that aren't created by R/Python in that folder. I encourage you to organize this repository in a sensible way.
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Name                                              | Description                                                                                                                                                                                         | Type        | Units   | Range/Values                                                      |
++===================================================+=====================================================================================================================================================================================================+=============+=========+===================================================================+
+| VIN (1-10)                                        | The 1st 10 characters of each vehicle's Vehicle Identification Number (VIN).                                                                                                                        | Text        | NA      | NA                                                                |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| County                                            | This is the geographic region of a state that a vehicle's owner is listed to reside within. Vehicles registered in Washington state may be located in other states.                                 | Categorical | NA      | 1 = Adams                                                         |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = Alameda                                                       |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 3 = Alexandria                                                    |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 4 = Allen                                                         |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | .........                                                         |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 179 = Yellowstone                                                 |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| City                                              | The city in which the registered owner resides.                                                                                                                                                     | Categorical | NA      | 1 = Aberdeen                                                      |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = Acme                                                          |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | ........                                                          |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 685 = Zillah                                                      |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| State                                             | This is the geographic region of the country associated with the record. These addresses may be located in other states.                                                                            | Categorical | NA      | 1 = AK                                                            |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = AL                                                            |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | .........                                                         |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 43 = WY                                                           |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Postal Code                                       | The 5 digit zip code in which the registered owner resides.                                                                                                                                         | Numeric     | NA      |                                                                   |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Model Year                                        | The model year of the vehicle, determined by decoding the Vehicle Identification Number (VIN).                                                                                                      | Numeric     | Year    | Min = 1997                                                        |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | Max = 2024                                                        |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Make                                              | The manufacturer of the vehicle, determined by decoding the Vehicle Identification Number (VIN).                                                                                                    | Categorical | NA      | 1 = ALFA ROMEO                                                    |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = AUDI                                                          |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | .......                                                           |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 37 = WHEEGO ELECTRIC CARS                                         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Model                                             | The model of the vehicle, determined by decoding the Vehicle Identification Number (VIN).                                                                                                           | Categorical | NA      | 1= 330E                                                           |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = 500                                                           |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 3 = 530E                                                          |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | ......                                                            |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 127 = XC90                                                        |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Electric Vehicle Type                             | This distinguishes the vehicle as all electric or a plug-in hybrid                                                                                                                                  | Categorical | NA      | 1 = Battery Electric Vehicle (BEV)                                |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = Plug-in Hybrid Electric Vehicle (PHEV)                        |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Clean Alternative Fuel Vehicle (CAFV) Eligibility | This categorizes vehicle as Clean Alternative Fuel Vehicles (CAFVs) based on the fuel requirement and electric-only range requirement in House Bill 2042 as passed in the 2019 legislative session. | Categorical | NA      | 1 = Clean Alternative Fuel Vehicle Eligible                       |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 2 = Eligibility unknown as battery range has not been researched. |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 3 = Not eligible due to low battery range                         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Electric Range                                    | Describes how far a vehicle can travel purely on its electric charge.                                                                                                                               | Numeric     | Miles   | Min =0.00                                                         |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | Max = 337                                                         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Base MSRP                                         | This is the lowest Manufacturer's Suggested Retail Price (MSRP) for any trim level of the model in question.                                                                                        | Numeric     | Dollars | Min = 0.00                                                        |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | Max = 845000                                                      |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Legislative District                              | The specific section of Washington State that the vehicle's owner resides in, as represented in the state legislature.                                                                              | Categorical | NA      | 1 to 49 with 1 representing District 1                            |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | NA indicates missing data                                         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| DOL Vehicle ID                                    | Unique number assigned to each vehicle by Department of Licensing for identification purposes.                                                                                                      | Numeric     | NA      | Min = 4385                                                        |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | Max = 479254772                                                   |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Vehicle Location                                  | The center of the ZIP Code for the registered vehicle.                                                                                                                                              | Character   | NA      |                                                                   |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| Electric Utility                                  | Data of Washington vehicle addresses and electric power retail service territories, classified by type and combined using geographic information systems                                            | Categorical | NA      | 1 =Avista Corp                                                    |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | .......                                                           |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | 76 = PUGET SOUND ENERGY INC\|\|PUD NO 1 OF WHATCOM COUNTY         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
+| 2022 Census Tract                                 | Combination of the state, county, and census tract codes as assigned by the United States Census Bureau in the 2020 census, also known as Geographic Identifier (GEOID).                            | Numeric     | NA      | Min = 1.081e+09                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | Max = 5.603e+10                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         |                                                                   |
+|                                                   |                                                                                                                                                                                                     |             |         | NA indicates missing data                                         |
++---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
