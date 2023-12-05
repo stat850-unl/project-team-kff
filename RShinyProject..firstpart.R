@@ -84,7 +84,7 @@ server <- function(input, output) {
   })
 
 
-  Funmibi UNL: output$vehicle_plot <- renderPlot({
+ output$vehicle_plot <- renderPlot({
     filtered_data() %>%
       ggplot(aes(x = Make, y = Electric.Range, fill = Make)) +
       geom_boxplot() +
