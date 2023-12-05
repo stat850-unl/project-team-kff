@@ -4,19 +4,6 @@ format: html
 editor: visual
 ---
 
-## Instructions
-
-Each member of your team should modify this document in some way and push their modifications to the repository in a separate commit. This will ensure that you have set your repository up in a way that ensures all group members are working with the same repository.
-
-Please ensure that you have set your git name and email address on your computer by **modifying** the following commands and running them in the terminal:
-
-```         
-git config --global user.name "Mona Lisa"
-git config --global user.email "mona@lisa.com"
-```
-
-In the proposal as in the final report, all of your code chunks should be set so that `echo = F`, which prevents the code from being printed in the report. You should also set `message = F, warning = F`, which will reduce the amount of additional output which is present in the report. You can customize the execution of code in quarto by using additional options, some of which are detailed [here](https://quarto.org/docs/computations/execution-options.html).
-
 ## Data
 
 ### Source
@@ -37,7 +24,11 @@ summary(data)
 str(data) 
 ```
 
-```{r, echo=FALSE,message=FALSE, warning=FALSE}  library(dplyr)  Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")   data <- data %>% mutate_at(Cat_Variable, as.factor)}
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+library(dplyr)  
+Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")   
+data <- data %>% mutate_at(Cat_Variable, as.factor)
+}
 ```
 
 ### Description
@@ -148,7 +139,7 @@ Here is a data dictionary showing each variable, the type of variable, units, an
 |                                                   |                                                                                                                                                                                                     |             |         | NA indicates missing data                                         |
 +---------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+---------+-------------------------------------------------------------------+
 
-**Project Goals**
+## Project Goals
 
 This data is interesting to us because we are keen on unveiling the dominant category of electric vehicles (BEVs or PHEVs) and identifying the most popular "make" and "model" across different cities and states in the United States. Additionally, we're eager to explore intriguing details, like pinpointing regions with a high prevalence of Tesla ownership and uncovering interesting findings about electric cars within the dataset.
 
@@ -189,3 +180,50 @@ We expect to create:
 -   Create stacked bar plots to illustrate the preference for specific "Model" across the different "Make of electric vehicles" for states or cities.
 
 Note: We'll use graphs and numerical summaries such as histograms or density plots (continuous variables), column plots (categorical variables), boxplots, 5 number summaries (min, 25%, mean, 75%, and max), tabular data summaries (for categorical variables).
+
+## Division of Labor
+
+What we'll be doing
+
+1.  Week of Nov 6 -- Work on cleaning the data, performing data summary and visualization.
+
+2.  Week of Nov 13 -- Data Transformation, modelling and using the new findings to refine the objectives and generate new interesting ideas.
+
+3.  Week of Nov 20 -- Begin to write the project Report
+
+4.  Week of Nov 27 -- Make final changes based on input from the course lecturer.
+
+5.  Week of Dec 4 - Complete the project presentation and video
+
+- Clean the data (Kena)
+- Data Summary (Francis)
+- Visualization (Funmibi)
+- Transformation (Kena)
+- Modelling (Francis)
+- Use findings to refine the objectives and generate new interesting ideas. (Funmibi)
+- Create Shiny Application based on the new idea (Kena, Francis, Funmibi)
+- Presentation (Kena, Francis, Funmibi)
+
+## Additional Comments
+
+------
+
+Git Fame output:
+
+project-team-kff$ git fame .--incl=".(q|Q|r|R)md"
+Processing: 100%|██████████████████████████████████████████████████████████████████████████████████████████████| 4/4 [00:00<00:00, 224.71file/s]
+Total commits: 4
+Total ctimes: 19
+Total files: 7
+Total loc: 457
+| Author                |   loc |   coms |   fils |  distribution   |
+|:----------------------|------:|-------:|-------:|:----------------|
+| github-classroom[bot] |   265 |      1 |      4 | 58.0/25.0/57.1  |
+| Fasanya               |   120 |      1 |      1 | 26.3/25.0/14.3  |
+| Augustine Kena Adjeia |    42 |      1 |      1 | 9.2/25.0/14.3   |
+| Francis Marfo         |    30 |      1 |      1 | 6.6/25.0/14.3   |
+
+
+I like the project topic, and since I just bought a Bolt EUV a month ago (and have had a hybrid Ford CMax for years), I'm curious to see what you come up with. 
+
+Regression isn't a topic covered in this class, so while you are welcome to fit one or more regressions, I would encourage you to focus your efforts on demonstrating your mastery of this course's learning objectives.
