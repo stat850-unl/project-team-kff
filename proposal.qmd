@@ -24,7 +24,11 @@ summary(data)
 str(data) 
 ```
 
-```{r, echo=FALSE,message=FALSE, warning=FALSE}  library(dplyr)  Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")   data <- data %>% mutate_at(Cat_Variable, as.factor)}
+```{r, echo=FALSE,message=FALSE, warning=FALSE}
+library(dplyr)  
+Cat_Variable <- c("County","City","State","Make","Model","Electric.Vehicle.Type","Legislative.District","Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility","Electric.Utility")   
+data <- data %>% mutate_at(Cat_Variable, as.factor)
+}
 ```
 
 ### Description
