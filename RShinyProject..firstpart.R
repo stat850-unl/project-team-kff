@@ -83,9 +83,45 @@ server <- function(input, output) {
     selectInput("make", "Make", choices = selects)
   })
 
-#Add plot
 
+  Funmibi UNL: output$vehicle_plot <- renderPlot({
+    filtered_data() %>%
+      ggplot(aes(x = Make, y = Electric.Range, fill = Make)) +
+      geom_boxplot() +
+      labs(title = "Electric Range by Electric Vehicle Make", x = "Electric Vehicle Make", y = "Electric Range") +
+      theme_minimal() +
+      guides(fill = FALSE)
+
+  })
+  output$vehicle_plot2 <- renderPlot({
+    filtered_data() %>%
+      ggplot(aes(x = Model.Year, y = Electric.Range, fill = Model.Year)) +
+      geom_bar(stat = "identity") +
+      labs(title = "Electric Range by Electric Vehicle Model Year", x = "Electric Vehicle Model Year", y = "Electric Range")
+  })
+
+  output$vehicle_plot3 <- renderPlot({
+    filtered_data() %>%
+      ggplot(aes(x = Make, fill = Electric.Vehicle.Type)) +
+      geom_bar(color = "black") +
+      labs(title = "Top Makes by Electric Vehicle Type", x = "Make", y = "Count") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+      scale_fill_manual(values = c("orange", "brown"))
+  })
+
+  output$vehicle_plot4 <- renderPlot({
+    filtered_data() %>%
+      ggplot(aes(x = Clean.Alternative.Fuel.Vehicle..CAFV..Eligibility, fill = Electric.Vehicle.Type)) +
+      geom_bar(color = "black") +
+      labs(title = "Clean Alternative Fuel Vehicle Eligibility by Electric Vehicle Type", x = "Clean Alternative Fuel Vehicle Eligibility", y = "Count") +
+      theme_minimal() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+      scale_fill_manual(values = c("orange", "brown"))
+  })
 
 }
+
+shinyApp(ui = ui, server = server)
 
 
