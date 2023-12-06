@@ -206,6 +206,10 @@ ggplot(state_adoption, aes(x = State, y = Average_Electric_Range , fill = Total_
        fill = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+<<<<<<< HEAD
+=======
+
+>>>>>>> 571d5785c64f885dd9a2588575846d728d2e1977
 ```{r}
 #| label: fig-state
 #| fig-width: 8
@@ -237,7 +241,11 @@ data <- data %>% filter(State == "WA")
 
 Some of the interesting things we found were that in @fig-state_avg, electric Vehicles in New Hamsphire had the highest average electric charge since vehicle in New Hamsphire travelled the farthest purely on its electric charge whereas electric vehicles in kansas travel the least.
 
+<<<<<<< HEAD
 As shown in @fig-state, about 99% of the electric vehicles registered in Washington state were used in Washington State. Although other vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were very low, we decided to focus more on the vehicles used in Washington State. To cater for the other states, we created an RShiny app where we could visualize the distributions of vehicles in all states <https://kenafrancisfunmibi.shinyapps.io/KFFShinyApp/>
+=======
+As shown in @fig-state, about 99% of the electric vehicles registered in Washington state were used in Washington State. Although other vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were very low, we decided to focus more on the vehicles used in Washington State. To cater for the other states, we created an RShiny app where we could visualize the distributions of vehicles in all states.
+>>>>>>> 571d5785c64f885dd9a2588575846d728d2e1977
 
 ## Methods
 
