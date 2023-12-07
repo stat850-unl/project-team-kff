@@ -359,7 +359,7 @@ ggplot(top_10_subset_city , aes(x = reorder(City, -Total_Vehicles), y = Average_
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-We observed that King country recorded the highest average electric range while Sammamish was the city with the highest average electric range. This informs us about how far a vehicle can travel purely on its electric charge.
+We observed that King county recorded the highest average electric range while Sammamish was the city with the highest average electric range. This informs us about how far a vehicle can travel purely on its electric charge.
 
 ## Exploration topic
 
