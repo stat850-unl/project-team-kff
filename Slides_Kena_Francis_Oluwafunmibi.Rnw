@@ -1,0 +1,233 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usetheme{Warsaw}
+\usecolortheme{crane}
+\usepackage{ragged2e}
+
+
+\title{Comparative analysis of Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) registered through Washington State Department of Licensing (DOL)}
+\author{Kena, Francis, and Oluwafunmibi}
+\date{\today}
+
+\begin{document}
+\justifying
+
+\frame{\titlepage}
+
+\begin{frame}{Introduction}
+  \begin{itemize}
+    \item Battery Electric Vehicles (BEVs) vs Plug-in Hybrid Electric Vehicles (PHEVs)
+    \item Battery Electric Vehicle (BEV) is an all-electric vehicle using one or more batteries to store the electrical energy that powers the motor.
+     \item BEVs are charged by plugging the vehicle in to an electric power source.
+     \item Plug-in Hybrid Electric Vehicle (PHEV) is a vehicle that uses one or more batteries to power an electric motor.
+    \item PHEVs use fuel such as gasoline or diesel to power an internal combustion engine. It is charged by plugging the vehicle into an electric power source.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Data Description}
+  \begin{itemize}
+  \item The data was collected through the vehicle registration records with the Washington State Department of License (DoL).
+ \item Data: \url{https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD$}
+     \item These vehicles are duly registered as of September 30, 2023 and are currently on record  with the Washington State Department of Licensing (DOL).
+    \item When an individuals purchase a BEV or PHEV and intends to operate on public roads, they are required to register the vehicle with the department of licensing.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Data Description(Cont'd)}
+  \begin{itemize}
+  \item County (Categorical) : This is the geographic region of a state that a vehicle's owner is listed to reside within.
+  \item City (Categorical): The city in which the registered owner resides.
+  \item State-This is the geographic region of the county associated with the record. These addresses may be located in other states
+  \item Model Year (Numeric): The model year of the vehicle, determined by decoding the Vehicle Identification Number (VIN).
+  \item Make (Categorical): The manufacturer of the vehicle, determined by decoding the Vehicle Identification Number (VIN).
+  \item Electric Vehicle Type (Categorical): This distinguishes the vehicle as all electric or a plug-in hybrid
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Data Summary(Cont'd)}
+  \begin{itemize}
+  \item Clean Alternative Fuel Vehicle (CAFV) Eligibility (Categorical): This categorizes vehicle as Clean Alternative Fuel Vehicles (CAFVs) based on the fuel requirement and electric-only range requirement in House Bill 2042 as passed in the 2019 legislative session.
+  \item Electric Range (Numeric): Describes how far a vehicle can travel purely on its electric charge.
+  \item Base MSRP (Numeric): This is the lowest Manufacturer's Suggested Retail Price (MSRP) for any trim level of the model.
+  \item (Categorical) Legislative District: The specific section of Washington State that the vehicle's owner resides in, as represented in the state legislature.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Objectives}
+  \begin{itemize}
+    \item We used this data set to explore the following:
+    \item Which demographics (cities and counties) adopted electric vehicles more rapidly?
+    \item How do the counties and cities vary in terms of electric range? What does it say?
+    \item What are consumer preferences? Which "Make" is very popular among the customers and which vehicles resonate with residents?
+    \item How do the vehicle types vary by electric range and vehicle "Make"?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Objectives(Cont'd)}
+  \begin{itemize}
+    \item Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
+    \item Do the distributions of electric vehicle model years provide information about the age of the vehicles?
+    \item The market share of different electric vehicle types, distinguishing between Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs).
+    \item Determine the distribution of MSRP within different vehicle categories.
+    \item Create a line plot to display the vehicle price over the years.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Method}
+\begin{itemize}
+\item After reading data files, we used str function to display the structure of the data.
+\item The summary function was used to obtain a summary of each variable in our the data set.
+\item We also used mutate at function of dplyr package to transform columns of the data set to become factors using the as.factor function.
+\item We used the is.na function to identify missing values within the "Electric.Range".
+\item The following functions from the dplyr package were also used: arrange desc and top n functions were used to arrange the data frame in descending order.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Method(Cont'd)}
+\begin{itemize}
+\item We filtered the data by counties and cities, by using the group by function of the dplyr package and used semi join to return all rows from the our original "data" where there was a match in county with the new data "top10subset".
+\item This filtered our original data to obtain the top 10 counties with the highest number of vehicles.
+\item For data visualization, we basically used the ggplot function of the ggplot2 package to construct bar plots, bx plots, and line plots.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Fun facts 1}
+  \begin{center}  % Center the content
+    \includegraphics[width=0.8\textwidth]{fig1.jpg}
+  \end{center}
+  \begin{itemize}
+    \item Electric Vehicles in New Hampshire had the highest average electric charge since vehicles in New Hampshire traveled the farthest purely on their electric charge, whereas electric vehicles in Kansas travel the least.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fun facts 2}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig2.jpg}
+\end{center}
+\begin{itemize}
+    \item About 99 percent of the electric vehicles registered in Washington state were used in             Washington State.
+    \item Other vehicles were registered there but were used in other states.
+    \item As a result, We focused on vehicles used in Washington State.
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Result}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig3.jpg}
+\end{center}
+\begin{itemize}
+\item We observed that King county recorded the highest number of electric vehicles while Island had the least number of electric vehicles.
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig4.jpg}
+\end{center}
+\begin{itemize}
+\item For the cities, Seattle recorded the highest number of electric vehicles while Tacoma had the least number of electric vehicles
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.\textwidth]{fig5.jpg}
+\end{center}
+\begin{itemize}
+\item We observed that King country recorded the highest average electric range.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig6.jpg}
+\end{center}
+\begin{itemize}
+\item While Sammamish was the city with the highest average electric range. This informs us about how far a vehicle can travel purely on its electric charge.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig7.jpg}
+\end{center}
+\begin{itemize}
+\item We can observe that most consumers preferred Tesla. It was the most popular brand among customers. Volvo was the least popular vehicle brand among the consumers.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig8.jpg}
+\end{center}
+\begin{itemize}
+\item The box plot suggests Battery Electric Vehicles (BEVs) have higher electric range than Plug-in Hybrid Electric Vehicles (PHEVs). This means that the BEVs can travel farther purely on its electric charge than PHEVs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig9.jpg}
+\end{center}
+\begin{itemize}
+\item Tesla and Nissan have only uses BEVs while the Volvo, Toyota , Jeep, and Chrysler have only PHEVs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig10.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig11.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig12.jpg}
+\end{center}
+\begin{itemize}
+\item We observed that most of the "Make" of vehicles had their model year 2010-2020. The distributions are skewed. We observed outliers for Toyota, Ford, and Chevrolet.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig13.jpg}
+\end{center}
+\begin{itemize}
+\item BEVs have higher market share than PHEVs. This indicates that BEVs are popular among consumers in the market than PHEVs.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig14.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}{Result (Cont'd)}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{fig15.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}{Conclusion}
+  \begin{itemize}
+    \item Battery Electric Vehicles (BEVs) have a higher electric range than Plug-in Hybrid Electric Vehicles (PHEVs) and also have a higher market share than PHEVs.
+    \item Most consumers preferred Tesla indicating that it is the most popular brand among customers. Tesla and Nissan have only BEVs while Volvo, Toyota, Jeep, and Chrysler have only PHEV.
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
+
+
