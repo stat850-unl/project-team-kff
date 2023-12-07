@@ -132,10 +132,10 @@
 
 \begin{frame}{Result (Cont'd)}
 \begin{center}
-\includegraphics[width=0.\textwidth]{fig5.jpg}
+\includegraphics[width=0.8\textwidth]{fig5.jpg}
 \end{center}
 \begin{itemize}
-\item We observed that King country recorded the highest average electric range.
+\item We observed that King county recorded the highest average electric range.
 \end{itemize}
 \end{frame}
 
