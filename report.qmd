@@ -180,6 +180,8 @@ We used this data set to explore the following:
 
 -   Create a line plot to display the vehicle price over the years.
 
+-   Create RShiny to display the distributions of the vehicles across all states, counties, and cities.
+
 ```{r}
 #| echo: false
 
@@ -194,7 +196,7 @@ state_adoption <- data %>%
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the shows average electric range by states"
+#| fig-cap: "This figure shows the average electric range by states"
 #| echo: false
 
 #Plot average electric range by state
@@ -212,18 +214,17 @@ ggplot(state_adoption, aes(x = State, y = Average_Electric_Range , fill = Total_
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the shows total vehicles by states"
+#| fig-cap: "This figure shows the total vehicles by states"
 #| echo: false
 
-#Plot total vehicles by state
+#Plot of total vehicles by state
 ggplot(state_adoption, aes(x = State, y = Total_Vehicles, fill = Average_Electric_Range)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Average Electric Range by State",
+  labs(title = "Total vehicles by State",
        x = "State",
        y = "Total Vehicles",
        fill = "Average Electric Range") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
 ```
 
 ```{r}
@@ -238,11 +239,9 @@ data <- data %>% filter(State == "WA")
 
 Some of the interesting things we found were that in @fig-state_avg, electric Vehicles in New Hamsphire had the highest average electric charge since vehicle in New Hamsphire travelled the farthest purely on its electric charge whereas electric vehicles in kansas travel the least.
 
-
 As shown in @fig-state, about 99% of the electric vehicles registered in Washington state were used in Washington State. Although other vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were very low, we decided to focus more on the vehicles used in Washington State. To cater for the other states, we created an RShiny app where we could visualize the distributions of vehicles in all states <https://kenafrancisfunmibi.shinyapps.io/KFFShinyApp/>
 
 As shown in @fig-state, about 99% of the electric vehicles registered in Washington state were used in Washington State. Although other vehicles were registered in Washington state, they were used in other states. However, since the percentages of these vehicles used in other states were very low, we decided to focus more on the vehicles used in Washington State. To cater for the other states, we created an RShiny app where we could visualize the distributions of vehicles in all states.
-
 
 ## Methods
 
@@ -287,16 +286,17 @@ top_10_subset_city <- City_adoption %>%
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the top 10 Counties in Washington State"
+#| fig-cap: "This figure shows the Total Electric Vehicles of the Top 10 Counties"
 #| echo: false
 
 #  Top 10 Counties in Washington State
 ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total_Vehicles)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Top 10 counties in Washington State ",
+  labs(title = "Total Electric Vehicles of the Top 10 Counties ",
        x = "County",
        y = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
 ```{r}
@@ -304,13 +304,13 @@ ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the top 10 Cities in Washington State"
+#| fig-cap: "This figure shows the Total Electric Vehicles of the Top 10 Cities"
 #| echo: false
 
 #  Top 10 Cities in Washington State
 ggplot(top_10_subset_city, aes(x = reorder(City, -Total_Vehicles), y = Total_Vehicles)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Top 10 cities in Washington State ",
+  labs(title = "Total Electric Vehicles of the Top 10 Cities",
        x = "Cities",
        y = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -327,17 +327,17 @@ How do the counties and cities vary in terms of electric range? What does it say
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the Average electric range by county"
+#| fig-cap: "This figure shows the Average Electric Range of the Top 10 counties"
 #| echo: false
 
-# Average electric range by county
-ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total_Vehicles, fill = Average_Electric_Range )) +
+# Average Electric Range by County
+ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y =Average_Electric_Range, fill =    Total_Vehicles )) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_gradient(low = "yellow", high = "darkblue") +
-  labs(title = "Average Electric Range of the Top 10 counties in Washington State",
+  labs(title = "Average Electric Range of the Top 10 counties",
        x = "County",
-       y = "Total Vehicles",
-       fill = "Average Electric Range") +
+       y = " Average Electric Range",
+       fill = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -346,16 +346,16 @@ ggplot(top_10_subset_county, aes(x = reorder(County, -Total_Vehicles), y = Total
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the Average electric range by city"
+#| fig-cap: "This figure shows the Average Electric Range of the Top 10 Cities"
 #| echo: false
 
 # Average electric range by city
-ggplot(top_10_subset_city , aes(x = reorder(City, -Total_Vehicles), y = Total_Vehicles, fill = Average_Electric_Range )) +
+ggplot(top_10_subset_city , aes(x = reorder(City, -Total_Vehicles), y = Average_Electric_Range , fill = Total_Vehicles)) +
   geom_bar(stat = "identity", position = "dodge") +scale_fill_gradient(low = "green", high = "darkblue")+
-  labs(title = "Average Electric Range of the Top 10 Cities in Washington State",
+  labs(title = "Average Electric Range of the Top 10 Cities",
        x = "City",
-       y = "Total Vehicles",
-       fill = "Average Electric Range") +
+       y = "Average Electric Range",
+       fill = "Total Vehicles") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -384,13 +384,13 @@ data_top_makes <- subset_data %>%
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the top 10 Electric Vehicle Makes"
+#| fig-cap: "This figure shows the top 10 Electric Vehicle Make"
 #| echo: false
  
 # Bar plot of top 10 Makes
 ggplot(data_top_makes, aes(x = Make)) +
   geom_bar(fill = "skyblue", color = "black") +
-  labs(title = "Top 10 Makes", x = "Make", y = "Count") +
+  labs(title = "Top 10 Electric Vehicle Make", x = "Make", y = "Count") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
@@ -434,13 +434,13 @@ ggplot(data_ev_types, aes(x = Electric.Vehicle.Type, y = Electric.Range, fill = 
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the barplot of how vehicle type varies by Make"
+#| fig-cap: "This figure shows the barplot of Electric Vehicle Type of Top 10 Make"
 #| echo: false
 
 # How vehicle type varies by "Make"
 ggplot(data_top_makes, aes(x = Make, fill = Electric.Vehicle.Type)) +
   geom_bar(color = "black") +
-  labs(title = "Top 10 Makes by Electric Vehicle Type", x = "Make", y = "Count") +
+  labs(title = "Electric Vehicle Type of Top 10 Make", x = "Make", y = "Count") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_fill_manual(values = c("orange", "brown"))
@@ -478,7 +478,7 @@ Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the Bar plot of Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make"
+#| fig-cap: "This figure shows the Bar plot of Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceted by Make"
 #| echo: false
 
 # Bar plot of Clean Alternative Fuel Vehicle (CAFV) Eligibility with Faceting by Make
@@ -574,13 +574,13 @@ ev_vehicle_trend <- data_top_makes  %>%
 #| fig-width: 8
 #| fig-height: 4 # Change the figure dimensions using fig-width/height
 #| out-width: 80% # This changes the size of the figure as rendered in the text.
-#| fig-cap: "This figure shows the scatter plot of Electric Vehicle Price by the Top 10 Make"
+#| fig-cap: "This figure shows the scatter plot of Electric Vehicle Price of the Top 10 Make"
 #| echo: false
 
 
 ggplot(ev_vehicle_trend, aes(x = Make)) +
   geom_point(aes(y = avg_price, color = "Average Price"), size = 3) +
-  labs(title = "Electric Vehicle Price by the Top 10 Make",
+  labs(title = "Electric Vehicle Price of the Top 10 Make",
        x = "Make",
        y = "Value") +
   theme_minimal() +
