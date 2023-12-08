@@ -16,6 +16,6 @@ The objectives of this analysis encompass investigating the adoption rates of el
 
 [Project Presentation]() <!-- Add a link to your Youtube presentation -->
 
-[Presentation Visual Aid](slides.qmd) <!-- Change this to link to your visual aid -->
+[Presentation Visual Aid](Slides_Kena_Francis_Oluwafunmibi.pdf) <!-- Change this to link to your visual aid -->
 
 [Project Report](report.qmd)
